@@ -4,11 +4,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { ChatBubbleLeftIcon, TrashIcon } from '@heroicons/react/24/outline';
-import {
-  getFireStoreChatById,
-  deleteFireStoreChat,
-  getTextMessage,
-} from '../utils';
+import { getFirestoreChatById, deleteFirestoreChat } from '@utils/firestore';
+import { getTextMessage } from '../utils';
 
 interface ChatRowProps {
   id: string;
@@ -18,7 +15,7 @@ export const ChatRow: FC<ChatRowProps> = ({ id }) => {
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
-  const [messages] = useCollection(getFireStoreChatById(session, id));
+  const [messages] = useCollection(getFirestoreChatById(session, id));
   const [active, setActive] = useState(false);
 
   useEffect(() => {
@@ -27,7 +24,7 @@ export const ChatRow: FC<ChatRowProps> = ({ id }) => {
   }, [pathname, id]);
 
   const removeChat = async () => {
-    await deleteFireStoreChat(session, id);
+    await deleteFirestoreChat(session, id);
     router.replace('/');
   };
 

@@ -5,6 +5,7 @@ import { authOptions } from './api/auth/[...nextauth]/route';
 import { SessionProvider, Login } from '@components/auth';
 import { SideBar } from '@components/Home';
 import './globals.css';
+import { ClientProvider } from '@components/providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,6 +26,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         <SessionProvider session={session}>
           {session != null ? (
             <div className="flex">
+              <ClientProvider />
               <SideBar />
               <div className="bg-[#343541] flex-1">{children}</div>
             </div>

@@ -5,11 +5,12 @@ import { signOut, useSession } from 'next-auth/react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { NewChat } from './NewChat';
 import { ChatList } from './ChatList';
-import { getFireStoreChats } from '../utils';
+import { getFirestoreChats } from '@utils/firestore';
+import { ModelSelection } from './ModelSelection';
 
 export const SideBar = () => {
   const { data: session } = useSession();
-  const [chats] = useCollection(getFireStoreChats(session));
+  const [chats] = useCollection(getFirestoreChats(session));
 
   const handleSignOut = async () => {
     await signOut();
@@ -19,6 +20,11 @@ export const SideBar = () => {
     <div className="p-2 flex flex-col h-screen bg-[#202123] max-w-xs overflow-y-auto md:min-w-[20rem]">
       <div className="flex-1">
         <NewChat />
+
+        <div className="hidden sm:inline">
+          <ModelSelection />
+        </div>
+
         <ChatList chats={chats} />
       </div>
       {session != null && (

@@ -2,9 +2,9 @@
 
 import { useState, type FC, type ChangeEvent, type FormEvent } from 'react';
 import { useSession } from 'next-auth/react';
-import { serverTimestamp } from 'firebase/firestore';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
-import { type IMessage } from '../types';
+import toast from 'react-hot-toast';
+import { postToFirestore } from '@utils/firestore';
 
 interface ChatInputProps {
   chatId: string;
@@ -13,6 +13,8 @@ interface ChatInputProps {
 export const ChatInput: FC<ChatInputProps> = ({ chatId }) => {
   const { data: session } = useSession();
   const [prompt, setPrompt] = useState('');
+
+  const model = 'text-davinci-003';
 
   const handlePromptChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPrompt(event?.target.value);
@@ -24,19 +26,26 @@ export const ChatInput: FC<ChatInputProps> = ({ chatId }) => {
     const input = prompt.trim();
     setPrompt('');
 
-    // TODO: post firestore message
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const message: IMessage = {
-      text: input,
-      createdAt: serverTimestamp(),
-      user: {
-        _id: session?.user?.email!,
-        name: session?.user?.name!,
-        avatar:
-          session?.user?.image! ||
-          `https://ui-avatars.com/api/?name=${session?.user?.name ?? ''}`,
+    await postToFirestore(session, chatId, input);
+
+    const notification = toast.loading('ChatGPT is thinking...');
+
+    await fetch('/api/askQuestion', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    };
+      body: JSON.stringify({
+        prompt: input,
+        chatId,
+        model,
+        session,
+      }),
+    }).then(() => {
+      toast.success('ChatGPT has responded!', {
+        id: notification,
+      });
+    });
   };
 
   return (

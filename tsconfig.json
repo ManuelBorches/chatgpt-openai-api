@@ -31,6 +31,12 @@
       "@root/*": [
         "./*"
       ],
+      /* "@public/*": [
+        "./public/*"
+      ], */
+      "@utils/*": [
+        "./src/utils/*"
+      ],
     }
   },
   "include": [

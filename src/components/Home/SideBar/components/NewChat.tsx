@@ -1,16 +1,16 @@
 'use client';
 
 import { PlusIcon } from '@heroicons/react/24/solid';
+import { createFirestoreChat } from '@utils/firestore';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { createFireStoreChat } from '../utils';
 
 export const NewChat = () => {
   const router = useRouter();
   const { data: session } = useSession();
 
   const createNewChat = async () => {
-    const doc = await createFireStoreChat(session);
+    const doc = await createFirestoreChat(session);
     router.push(`/chat/${doc.id}`);
   };
 
