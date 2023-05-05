@@ -1,3 +1,34 @@
+'use client';
+
+import useSWR from 'swr';
+import Select from 'react-select';
+
+const fetchModels = async () =>
+  await fetch('/api/getEngines').then(async (res) => await res.json());
+
 export const ModelSelection = () => {
-  return <div>ModelSelection</div>;
+  const { data: models, isLoading } = useSWR('models', fetchModels);
+  const { data: model, mutate: setModel } = useSWR('model', {
+    fallbackData: 'text-davinci-003',
+  });
+
+  const handleSelectChange = async (event) => await setModel(event.value);
+
+  return (
+    <div className="mt-2">
+      <Select
+        className="mt-2"
+        options={models?.modelOptions}
+        defaultValue={model}
+        placeholder={model}
+        isSearchable
+        isLoading={isLoading}
+        menuPosition="fixed"
+        classNames={{
+          control: (state) => 'bg-[#434654] border-[#434654]',
+        }}
+        onChange={handleSelectChange}
+      />
+    </div>
+  );
 };

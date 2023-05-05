@@ -10,7 +10,7 @@ import { ModelSelection } from './ModelSelection';
 
 export const SideBar = () => {
   const { data: session } = useSession();
-  const [chats] = useCollection(getFirestoreChats(session));
+  const [chats, loading] = useCollection(getFirestoreChats(session));
 
   const handleSignOut = async () => {
     await signOut();
@@ -21,11 +21,10 @@ export const SideBar = () => {
       <div className="flex-1">
         <NewChat />
 
-        <div className="hidden sm:inline">
+        <div className="hidden md:inline">
           <ModelSelection />
         </div>
-
-        <ChatList chats={chats} />
+        <ChatList chats={chats} loading={loading} />
       </div>
       {session != null && (
         <img

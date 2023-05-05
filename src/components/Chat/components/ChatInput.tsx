@@ -5,6 +5,8 @@ import { useSession } from 'next-auth/react';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import toast from 'react-hot-toast';
 import { postToFirestore } from '@utils/firestore';
+import { ModelSelection } from '@components/Home/SideBar';
+import useSWR from 'swr';
 
 interface ChatInputProps {
   chatId: string;
@@ -13,8 +15,9 @@ interface ChatInputProps {
 export const ChatInput: FC<ChatInputProps> = ({ chatId }) => {
   const { data: session } = useSession();
   const [prompt, setPrompt] = useState('');
-
-  const model = 'text-davinci-003';
+  const { data: model } = useSWR('model', {
+    fallbackData: 'text-davinci-003',
+  });
 
   const handlePromptChange = (event: ChangeEvent<HTMLInputElement>) => {
     setPrompt(event?.target.value);
@@ -68,7 +71,9 @@ export const ChatInput: FC<ChatInputProps> = ({ chatId }) => {
           <PaperAirplaneIcon className="h-4 w-4 -rotate-45" />
         </button>
       </form>
-      <div>{/* TODO: AI Model Selection */}</div>
+      <div className="md:hidden">
+        <ModelSelection />
+      </div>
     </div>
   );
 };
