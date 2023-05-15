@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 import { getServerSession } from 'next-auth';
 import { Inter } from 'next/font/google';
-import { authOptions } from './api/auth/[...nextauth]/route';
+import { authOptions } from './options';
 import { SessionProvider, Login } from '@components/auth';
 import { SideBar } from '@components/Home';
 import './globals.css';

@@ -12,7 +12,8 @@ export const ModelSelection = () => {
     fallbackData: 'text-davinci-003',
   });
 
-  const handleSelectChange = async (event) => await setModel(event.value);
+  const handleSelectChange = async (event: { value: any }) =>
+    await setModel(event.value);
 
   return (
     <div className="mt-2">
